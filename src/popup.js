@@ -277,7 +277,7 @@
   // search functionality
   (function() {
     let lastVal;
-    searchInput.addEventListener("keyup", function() {
+    searchInput.addEventListener("keyup", function(e) {
       setActiveGroup(searchInput);
       let val = searchInput.value;
       // prevent flickering
@@ -296,6 +296,14 @@
           recentDiv.appendChild(cont);
         }
       }, 200);
+      // submit or when press enter
+      if  (e.keyCode === 10) {
+        // nothing
+        if (searchContainer.childElementCount === 0)
+          return;
+        // focus at first element of result
+        searchContainer.children[0].focus()
+      }
     });
   }());
 
