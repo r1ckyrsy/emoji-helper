@@ -297,7 +297,7 @@
         }
       }, 200);
       // submit or when press enter
-      if  (e.keyCode === 10) {
+      if  (e.keyCode === 13) {
         // nothing
         if (searchContainer.childElementCount === 0)
           return;
