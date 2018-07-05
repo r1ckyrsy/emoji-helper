@@ -426,7 +426,7 @@
   // Show the correct keyboard shortcut on Mac.
   let shortcut = document.getElementById("shortcut");
   if (navigator.userAgent.includes("Macintosh")) {
-    shortcut.textContent = "⌘-Shift-E";
+    shortcut.textContent = "⌘-Shift-Z";
   }
 
 }());
