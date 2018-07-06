@@ -172,8 +172,9 @@
   }
 
   function appendItem(container, item) {
-    let cont = document.createElement("div");
+    let cont = document.createElement("a");
     cont.classList.add("emoji");
+    cont.href = ""; // without href attribute. focus() doesn't works
     cont.title = item.name;
     cont.dataset.name = item.name;
     cont.dataset.unicode = item.unicode || "";
