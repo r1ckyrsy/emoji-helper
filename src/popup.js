@@ -171,10 +171,57 @@
     });
   }
 
+  function addNavigationEmojiListener(parent) {
+    let listEmoji = parent.children;
+    listEmoji = Array.prototype.slice.call(listEmoji);
+    let cols = 11;
+    let MAX_INDEX = parent.childElementCount-1;
+    let _groups = document.getElementsByClassName("groups")[0];
+
+    listEmoji.forEach( (node) => {
+      node.addEventListener("keyup", function(e) {
+        if (e.code === "Enter") {
+          node.click();
+        }
+        if (e.code === "Tab") {
+          detailInput.focus();
+        }
+        if (e.code === "Home") {
+          parent.children[0].focus();
+        }
+        if (e.code === "End") {
+          parent.children[MAX_INDEX].focus();
+        }
+      });
+      node.addEventListener("keydown", function(e) {
+        if (e.code === "Enter" || e.code === "Tab") {}
+        if (e.code === "ArrowDown") {
+          let idx = listEmoji.indexOf(node);
+          parent.children[ Math.min(idx + 11, MAX_INDEX) ].focus();
+          _groups.scrollTop = Math.min( _groups.scrollTop+46, _groups.scrollTopMax);
+        }
+        if (e.code === "ArrowRight") {
+          let idx = listEmoji.indexOf(node);
+          parent.children[ Math.min(idx + 1, MAX_INDEX) ].focus();
+        }
+        if (e.code === "ArrowUp") {
+          let idx = listEmoji.indexOf(node);
+          parent.children[ Math.max(idx - 11, 0) ].focus();
+          _groups.scrollTop = Math.max( _groups.scrollTop-46, 0);
+        }
+        if (e.code === "ArrowLeft") {
+          let idx = listEmoji.indexOf(node);
+          parent.children[ Math.max(idx - 1, 0) ].focus();
+        }
+        e.preventDefault();
+      });
+    });
+  }
+
   function appendItem(container, item) {
     let cont = document.createElement("a");
     cont.classList.add("emoji");
-    cont.href = ""; // without href attribute. focus() doesn't works
+    cont.href = "#"; // without href attribute. focus() doesn't works
     cont.title = item.name;
     cont.dataset.name = item.name;
     cont.dataset.unicode = item.unicode || "";
@@ -190,9 +237,9 @@
     if(recent.length){
       recentDiv.style.backgroundImage = "";
       // intermediate container to render the dom as few times as possible
-      let cont = document.createElement("div");
-      recent.forEach(appendItem.bind(null, cont));
-      recentDiv.appendChild(cont);
+      recent.forEach(appendItem.bind(null, recentDiv));
+
+      addNavigationEmojiListener(recentDiv);
     }else{
       // help screen if new install
       recentDiv.style.backgroundImage = 'url("./img/emoji-help.png")';
@@ -202,6 +249,7 @@
   for (let group of groups) {
     let nodes = Array.prototype.slice.call(group.childNodes);
     nodes.forEach(addEmojiClickListener);
+    addNavigationEmojiListener(group);
   }
 
   let setActiveGroup = (function() {
@@ -294,7 +342,7 @@
           });
           filtered = filtered.slice(0, MAX_SEARCH_RESULTS);
           filtered.forEach(appendItem.bind(null, searchContainer));
-          recentDiv.appendChild(cont);
+          addNavigationEmojiListener(searchContainer);
         }
       }, 200);
       // submit or when press enter
@@ -429,6 +477,35 @@
           searchInput.focus();
         }
         break;
+    }
+  });
+  document.body.addEventListener("keyup", (e) => {
+    if (e.code === "Enter") {
+      let _selected = document.querySelector(".selected").getAttribute("data-group");
+      let _group = document.getElementById(_selected);
+      let _active = document.activeElement;
+
+      // exception
+      if (_group.childElementCount === 0 || 
+        _active.className === "emoji") {
+        // nothing
+      }
+      // focus on group-logo element
+      else if (_active.classList.contains("group-logo")) {
+        // but not selected
+        if(!_active.classList.contains("selected")) {
+          // enter == click() on an group-logo element
+          _active.click()
+        }
+        // when selected
+        else {
+          _group.children[0].focus();
+        }
+      }
+      else if (_active === document.body) {
+        // give focus to emoji list
+        _group.children[0].focus();
+      }
     }
   });
 
