@@ -197,7 +197,7 @@
         if (e.code === "Enter" || e.code === "Tab") {}
         if (e.code === "ArrowDown") {
           let idx = listEmoji.indexOf(node);
-          parent.children[ Math.min(idx + 11, MAX_INDEX) ].focus();
+          parent.children[ Math.min(idx + cols, MAX_INDEX) ].focus();
           _groups.scrollTop = Math.min( _groups.scrollTop+46, _groups.scrollTopMax);
         }
         if (e.code === "ArrowRight") {
@@ -206,7 +206,7 @@
         }
         if (e.code === "ArrowUp") {
           let idx = listEmoji.indexOf(node);
-          parent.children[ Math.max(idx - 11, 0) ].focus();
+          parent.children[ Math.max(idx - cols, 0) ].focus();
           _groups.scrollTop = Math.max( _groups.scrollTop-46, 0);
         }
         if (e.code === "ArrowLeft") {
